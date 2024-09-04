@@ -1,0 +1,43 @@
+---
+services:
+  database:
+    image: postgres:16-alpine
+    container_name: database
+    ports:
+      - '5432:5432'
+    networks:
+      - application
+      - cloudbeaver
+    volumes:
+      - database:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+
+  cloudbeaver:
+    image: dbeaver/cloudbeaver:latest
+    container_name: cloudbeaver
+    ports:
+      - '${CB_PORT}:8978'
+    networks:
+      - cloudbeaver
+    volumes:
+      - cloudbeaver:/opt/cloudbeaver/workspace
+    environment:
+      - CB_SERVER_NAME=${CB_SERVER_NAME}
+      - CB_ADMIN_NAME=${CB_ADMIN_NAME}
+      - CB_ADMIN_PASSWORD=${CB_ADMIN_PASSWORD}
+    depends_on:
+      - database
+
+networks:
+  application:
+    driver: bridge
+  cloudbeaver:
+    driver: bridge
+
+volumes:
+  node_modules:
+  database:
+  cloudbeaver:
