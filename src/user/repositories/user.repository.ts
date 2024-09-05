@@ -37,4 +37,8 @@ export class UserRepository extends Repository<User> {
     await this.save(user);
     return user;
   }
+
+  async findById(id: string): Promise<User | undefined> {
+    return this.findOne({ where: { id } });
+  }
 }
