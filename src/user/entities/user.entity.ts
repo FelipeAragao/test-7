@@ -3,7 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
+  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -34,7 +34,7 @@ export class User {
     cascade: true,
     eager: true,
   })
-  @JoinColumn()
+  @JoinTable()
   location: Location;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
