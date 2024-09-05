@@ -3,14 +3,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
-  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { IsEmail } from 'class-validator';
-import { Location } from './location.entity';
 
 @Entity('users')
 export class User {
@@ -30,18 +27,29 @@ export class User {
   @Column({ type: 'varchar', length: 64 })
   password: string;
 
-  @ManyToMany(() => Location, (location) => location.users, {
-    cascade: true,
-    eager: true,
-  })
-  @JoinTable()
-  location: Location;
+  @Column('decimal', { precision: 10, scale: 7 })
+  lat: number;
+
+  @Column('decimal', { precision: 10, scale: 7 })
+  lng: number;
+
+  @Column({ type: 'varchar', length: 255 })
+  address: string;
+
+  @Column({ type: 'varchar', length: 100 })
+  city: string;
+
+  @Column({ type: 'varchar', length: 100 })
+  state: string;
+
+  @Column({ type: 'varchar', length: 20 })
+  zipcode: string;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
-  udpatedAt: Date;
+  updatedAt: Date;
 
   @BeforeInsert()
   hashPassword() {
