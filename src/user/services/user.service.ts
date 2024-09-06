@@ -4,7 +4,7 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from '../repositories/user.repository';
 import { UserOutput } from '../outputs/user.output';
-import { genSalt, hash } from 'bcrypt';
+import { compare, genSalt, hash } from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -22,6 +22,13 @@ export class UserService {
     return hash(password, salt);
   }
 
+  async validatePassword(
+    password: string,
+    hashPassword: string,
+  ): Promise<boolean> {
+    return compare(password, hashPassword);
+  }
+
   async create(createUserDto: CreateUserDto): Promise<UserOutput> {
     const { password, ...input } = createUserDto;
     const hashPassword = await this.hashPassword(password);
@@ -32,11 +39,24 @@ export class UserService {
     });
   }
 
-  async findOne(id: string): Promise<UserOutput> {
-    const user = await this.userRepository.findById(id);
+  async findById(id: string): Promise<UserOutput> {
+    const user = await this.userRepository.findByUniqueAttribute('id', id);
 
     if (!user) {
       throw new NotFoundException(`User with id ${id} not found`);
+    }
+
+    return user;
+  }
+
+  async findByLogin(login: string): Promise<UserOutput> {
+    const user = await this.userRepository.findByUniqueAttribute(
+      'login',
+      login,
+    );
+
+    if (!user) {
+      throw new NotFoundException(`User with id ${login} not found`);
     }
 
     return user;

@@ -37,8 +37,11 @@ export class UserRepository extends Repository<User> {
     return user;
   }
 
-  async findById(id: string): Promise<User | undefined> {
-    return this.findOne({ where: { id } });
+  async findByUniqueAttribute(
+    attribute: keyof User,
+    value: string,
+  ): Promise<User | undefined> {
+    return this.findOne({ where: { [attribute]: value } });
   }
 
   async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {

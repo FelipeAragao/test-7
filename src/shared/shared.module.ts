@@ -30,7 +30,7 @@ import validationSchema from './configs/validation';
     }),
     AppLoggerModule,
   ],
-  exports: [],
+  exports: [ConfigModule, AppLoggerModule],
   providers: [],
 })
 export class SharedModule {}
