@@ -1,5 +1,4 @@
 import {
-  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
@@ -68,10 +67,5 @@ export class User {
       state: this.state,
       zipcode: this.zipcode,
     };
-  }
-
-  @BeforeInsert()
-  hashPassword() {
-    this.password = ''; // TODO: Implement hashPassword functions
   }
 }

@@ -1,5 +1,6 @@
 export default () => ({
   env: process.env.ENV,
+  saltRounds: process.env.SALT_ROUNDS,
   appPort: parseInt(process.env.APP_PORT, 10),
   database: {
     host: process.env.POSTGRES_HOST,
