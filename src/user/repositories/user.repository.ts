@@ -3,6 +3,7 @@ import { DataSource, Repository } from 'typeorm';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { Injectable } from '@nestjs/common';
 import { User } from '../entities/user.entity';
+import { UpdateUserDto } from '../dto/update-user.dto';
 
 @Injectable()
 export class UserRepository extends Repository<User> {
@@ -24,14 +25,12 @@ export class UserRepository extends Repository<User> {
       email,
       login,
       password,
-      location: {
-        lat,
-        lng,
-        address,
-        city,
-        state,
-        zipcode,
-      },
+      lat,
+      lng,
+      address,
+      city,
+      state,
+      zipcode,
     });
 
     await this.save(user);
@@ -40,5 +39,42 @@ export class UserRepository extends Repository<User> {
 
   async findById(id: string): Promise<User | undefined> {
     return this.findOne({ where: { id } });
+  }
+
+  async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    const {
+      name,
+      email,
+      login,
+      password,
+      location: { lat, lng, address, city, state, zipcode } = {},
+    } = updateUserDto;
+
+    const input = Object.entries({
+      name,
+      email,
+      login,
+      password,
+      lat,
+      lng,
+      address,
+      city,
+      state,
+      zipcode,
+    }).reduce(
+      (acc, [key, value]) => (value ? { ...acc, [key]: value } : acc),
+      {},
+    );
+
+    const user = await this.preload({
+      id,
+      ...input,
+    });
+
+    if (user) {
+      return this.save(user);
+    }
+
+    return;
   }
 }

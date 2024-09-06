@@ -1,4 +1,4 @@
-import { IsDecimal, IsString, MaxLength } from 'class-validator';
+import { IsDecimal, IsOptional, IsAlpha, Matches } from 'class-validator';
 
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -9,7 +9,8 @@ export class LocationDto {
     type: 'decimal',
   })
   @IsDecimal()
-  lat: number;
+  @IsOptional()
+  lat?: number;
 
   @ApiProperty({
     description: 'Longitude of the location',
@@ -17,7 +18,8 @@ export class LocationDto {
     type: 'decimal',
   })
   @IsDecimal()
-  lng: number;
+  @IsOptional()
+  lng?: number;
 
   @ApiProperty({
     description:
@@ -28,31 +30,34 @@ export class LocationDto {
     ],
     type: 'string',
   })
-  @IsString()
-  address: string;
+  @IsAlpha()
+  @IsOptional()
+  address?: string;
 
   @ApiProperty({
     description: 'City where the address is located',
     examples: ['Penha', 'Manaus'],
     type: 'string',
   })
-  @IsString()
-  city: string;
+  @IsAlpha()
+  @IsOptional()
+  city?: string;
 
   @ApiProperty({
     description: 'State where the address is located',
     examples: ['Santa Catarinha', 'Amazonas'],
     type: 'string',
   })
-  @IsString()
-  state: string;
+  @IsAlpha()
+  @IsOptional()
+  state?: string;
 
   @ApiProperty({
     description: 'Zip code of the address',
     examples: ['88385-000', '69057-040'],
     type: 'string',
   })
-  @IsString()
-  @MaxLength(9)
-  zipcode: string;
+  @Matches(/^\d{5}-?\d{3}$/)
+  @IsOptional()
+  zipcode?: string;
 }

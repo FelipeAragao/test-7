@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from '../repositories/user.repository';
+import { UserOutput } from '../outputs/user.output';
 
 @Injectable()
 export class UserService {
@@ -11,15 +12,27 @@ export class UserService {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
-    return this.userRepository.createUser(createUserDto);
+  async create(createUserDto: CreateUserDto): Promise<UserOutput> {
+    return await this.userRepository.createUser(createUserDto);
   }
 
-  async findOne(id: string) {
-    return this.userRepository.findById(id);
+  async findOne(id: string): Promise<UserOutput> {
+    const user = await this.userRepository.findById(id);
+
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
+    return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<UserOutput> {
+    const user = await this.userRepository.updateUser(id, updateUserDto);
+
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
+    return user;
   }
 }

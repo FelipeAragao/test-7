@@ -1,13 +1,15 @@
 import {
   IsEmail,
   IsNotEmpty,
-  IsObject,
-  IsString,
   IsStrongPassword,
+  IsString,
+  ValidateNested,
+  Matches,
 } from 'class-validator';
 
 import { ApiProperty } from '@nestjs/swagger';
-import { LocationDto } from './location.dto';
+import { LocationDto } from './create-user.location.dto copy';
+import { Type } from 'class-transformer';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -15,7 +17,7 @@ export class CreateUserDto {
     example: 'John Doe',
     type: 'string',
   })
-  @IsString()
+  @Matches(/^(?![ .]+$)[a-zA-Z .]*$/gm)
   @IsNotEmpty()
   name: string;
 
@@ -58,7 +60,8 @@ export class CreateUserDto {
     },
     type: 'object',
   })
-  @IsObject()
+  @ValidateNested()
   @IsNotEmpty()
+  @Type(() => LocationDto)
   location: LocationDto;
 }
