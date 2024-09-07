@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
@@ -11,8 +19,10 @@ import {
 } from '@nestjs/swagger';
 import { AppLogger } from 'src/shared/logger/logger.service';
 import { UserRequestOutput } from '../outputs/user.output';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
 @ApiTags('users')
+@UseGuards(JwtAuthGuard)
 @Controller({ path: 'users', version: '1' })
 export class UserController {
   constructor(
@@ -56,6 +66,8 @@ export class UserController {
   })
   @Get(':id')
   async findOne(@Param('id') id: string) {
+    console.log('starting get endpoint');
+
     try {
       const user = await this.userService.findById(id);
 
