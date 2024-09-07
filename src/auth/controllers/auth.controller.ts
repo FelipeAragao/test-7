@@ -1,4 +1,4 @@
-import { Controller, Post, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import {
   ApiOkResponse,
   ApiTags,
@@ -7,6 +7,7 @@ import {
 import { LocalAuthGuard } from 'src/auth/guards/local.guard';
 import { LoginOutput } from 'src/auth/outputs/login.output';
 import { AuthService } from 'src/auth/services/auth.service';
+import { GoogleAuthGuard } from '../guards/google.guard';
 
 @ApiTags('authenticate')
 @Controller({ path: 'authenticate', version: '1' })
@@ -23,6 +24,20 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post()
   async login(@Request() { user }) {
+    try {
+      return this.authService.login(user);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  @UseGuards(GoogleAuthGuard)
+  @Get('sso')
+  async googleAuth(@Request() _request) {}
+
+  @UseGuards(GoogleAuthGuard)
+  @Get('sso/callback')
+  async googleAuthRedirect(@Request() { user }) {
     try {
       return this.authService.login(user);
     } catch (error) {

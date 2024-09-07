@@ -29,4 +29,11 @@ export default () => ({
     //   10,
     // ),
   },
+  sso: {
+    google: {
+      googleClientId: process.env.GOOGLE_CLIENT_ID,
+      googleClienteSecret: process.env.GOOGLE_CLIENT_SECRET,
+      googleCallbackUrl: process.env.GOOGLE_CALLBACK_URL,
+    },
+  },
 });

@@ -51,6 +51,10 @@ export class User {
   @Column({ type: 'varchar', length: 20 })
   zipcode: string;
 
+  @Exclude()
+  @Column({ type: 'varchar', length: 32, name: 'google_id', nullable: true })
+  googleId: string;
+
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
 

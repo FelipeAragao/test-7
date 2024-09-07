@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { LocationOutput } from './location.output';
 
 export class UserOutput {
@@ -19,9 +19,13 @@ export class UserOutput {
   @ApiProperty()
   login: string;
 
-  @Expose()
+  @Exclude()
   @ApiProperty()
   password: string;
+
+  @Exclude()
+  @ApiProperty()
+  googleId: string;
 
   @Expose()
   @ApiProperty()

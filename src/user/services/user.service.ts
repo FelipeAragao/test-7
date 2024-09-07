@@ -56,7 +56,20 @@ export class UserService {
     );
 
     if (!user) {
-      throw new NotFoundException(`User with id ${login} not found`);
+      throw new NotFoundException(`User with login ${login} not found`);
+    }
+
+    return user;
+  }
+
+  async findByEmail(email: string): Promise<UserOutput> {
+    const user = await this.userRepository.findByUniqueAttribute(
+      'email',
+      email,
+    );
+
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found`);
     }
 
     return user;
@@ -75,5 +88,11 @@ export class UserService {
     }
 
     return user;
+  }
+
+  async addGoogleId(email: string, googleId: string): Promise<boolean> {
+    const { affected } = await this.userRepository.update(email, { googleId });
+
+    return affected === 1;
   }
 }

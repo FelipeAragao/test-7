@@ -14,4 +14,7 @@ export default Joi.object({
   JWT_PRIVATE_KEY_BASE64: Joi.string().required(),
   JWT_ACCESS_TOKEN_EXP_IN_SEC: Joi.number().required(),
   // JWT_REFRESH_TOKEN_EXP_IN_SEC: Joi.number().required(),
+  GOOGLE_CLIENT_ID: Joi.string().optional(),
+  GOOGLE_CLIENT_SECRET: Joi.string().optional(),
+  GOOGLE_CALLBACK_URL: Joi.string().uri().optional(),
 });
