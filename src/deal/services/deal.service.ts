@@ -5,19 +5,23 @@ import { DealRepository } from '@deal/repositories/deal.repository';
 import { DealOutput } from '@deal/outputs/deal.output';
 import { CustomFile } from '@shared/types/customFile.type';
 import { PhotoRepository } from '@deal/repositories/photo.repository';
+import { UserRepository } from '@user/repositories/user.repository';
 
 @Injectable()
 export class DealService {
   constructor(
     private readonly dealRepository: DealRepository,
     private readonly photoRepository: PhotoRepository,
+    private readonly userRepository: UserRepository,
   ) {}
 
   async create(
     createDealDto: CreateDealDto,
+    userId: string,
     photos: CustomFile[] = [],
   ): Promise<DealOutput> {
-    const deal = await this.dealRepository.createDeal(createDealDto);
+    const user = await this.userRepository.findByUniqueAttribute('id', userId);
+    const deal = await this.dealRepository.createDeal(createDealDto, user);
 
     await Promise.all([
       photos.map(

@@ -2,6 +2,7 @@ import { CreateDealDto } from '@deal/dto/create-deal.dto';
 import { UpdateDealDto } from '@deal/dto/update-deal.dto';
 import { Deal } from '@deal/entities/deal.entity';
 import { Injectable } from '@nestjs/common';
+import { User } from '@user/entities/user.entity';
 import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
@@ -10,7 +11,7 @@ export class DealRepository extends Repository<Deal> {
     super(Deal, dataSource.createEntityManager());
   }
 
-  async createDeal(createDealDto: CreateDealDto): Promise<Deal> {
+  async createDeal(createDealDto: CreateDealDto, user: User): Promise<Deal> {
     const {
       type,
       description,
@@ -33,6 +34,7 @@ export class DealRepository extends Repository<Deal> {
       zipcode,
       urgencyType,
       limitDate,
+      user,
     });
     await this.save(deal);
     return deal;

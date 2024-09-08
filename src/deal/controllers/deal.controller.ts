@@ -8,6 +8,7 @@ import {
   UseGuards,
   UploadedFiles,
   UseInterceptors,
+  Request,
 } from '@nestjs/common';
 import { DealService } from '../services/deal.service';
 import { CreateDealDto } from '../dto/create-deal.dto';
@@ -93,9 +94,10 @@ export class DealController {
   async create(
     @Body() createDealDto: CreateDealDto,
     @UploadedFiles() photos: CustomFile[],
+    @Request() { user: { userId } },
   ) {
     try {
-      const deal = await this.dealService.create(createDealDto, photos);
+      const deal = await this.dealService.create(createDealDto, userId, photos);
       return { deal };
     } catch (error) {
       console.log(error);

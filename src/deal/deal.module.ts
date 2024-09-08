@@ -11,6 +11,7 @@ import { PhotoRepository } from './repositories/photo.repository';
 import { MulterModule } from '@nestjs/platform-express';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MulterConfigService } from '@shared/configs/multer.config';
+import { UserRepository } from '@user/repositories/user.repository';
 
 @Module({
   imports: [
@@ -24,6 +25,6 @@ import { MulterConfigService } from '@shared/configs/multer.config';
     }),
   ],
   controllers: [DealController],
-  providers: [DealService, DealRepository, PhotoRepository],
+  providers: [DealService, DealRepository, PhotoRepository, UserRepository],
 })
 export class DealModule {}
