@@ -1,34 +1,42 @@
+import { Exclude, Expose } from 'class-transformer';
+import { User } from '@user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-import { IsEmail } from 'class-validator';
-import { Exclude, Expose } from 'class-transformer';
-import { Deal } from '@deal/entities/deal.entity';
+export enum DealType {
+  SELLING = 1,
+  TRADE = 2,
+  WISH = 3,
+}
 
-@Entity('users')
-export class User {
+export enum UrgencyType {
+  LOW = 1,
+  MEDIUM = 2,
+  HIGH = 3,
+}
+
+@Entity('deals')
+export class Deal {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 128 })
-  name: string;
+  @Column({ type: 'enum', enum: DealType })
+  type: DealType;
 
-  @Column({ type: 'varchar', unique: true, length: 128 })
-  @IsEmail()
-  email: string;
+  @Column({ type: 'decimal' })
+  value: number;
 
-  @Column({ type: 'varchar', unique: true, length: 64 })
-  login: string;
+  @Column({ type: 'text' })
+  description: string;
 
-  @Exclude()
-  @Column({ type: 'varchar', length: 64 })
-  password: string;
+  @Column({ type: 'varchar', length: 256, nullable: true, name: 'trade_for' })
+  tradeFor: string;
 
   @Exclude()
   @Column('decimal', { precision: 10, scale: 7 })
@@ -53,9 +61,11 @@ export class User {
   @Column({ type: 'varchar', length: 20 })
   zipcode: string;
 
-  @Exclude()
-  @Column({ type: 'varchar', length: 32, name: 'google_id', nullable: true })
-  googleId: string;
+  @Column({ type: 'enum', enum: UrgencyType, name: 'urgency' })
+  urgencyType: UrgencyType;
+
+  @Column({ type: 'date', name: 'limit_date' })
+  limitDate: Date;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
@@ -75,6 +85,14 @@ export class User {
     };
   }
 
-  @OneToMany(() => Deal, (deal) => deal.user)
-  deals: Deal[];
+  @Expose()
+  get urgency() {
+    return {
+      type: this.urgencyType,
+      limitDate: this.limitDate,
+    };
+  }
+
+  @ManyToOne(() => User, (user) => user.deals)
+  user: User;
 }

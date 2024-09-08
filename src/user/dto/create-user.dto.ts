@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 
 import { ApiProperty } from '@nestjs/swagger';
-import { LocationDto } from './create-user.location.dto copy';
+import { LocationDto } from './create-user.location.dto';
 import { Type } from 'class-transformer';
 
 export class CreateUserDto {
@@ -51,12 +51,12 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'User location',
     example: {
-      lat: 37.7749456,
-      lng: 37.7749456,
+      lat: '37.7749456',
+      lng: '37.7749456',
       address: 'Rua Salvador, 440 - Adrianópolis',
       city: 'Manaus',
       state: 'Amazonas',
-      zipcode: 69057040,
+      zipcode: '69057040',
     },
     type: 'object',
   })

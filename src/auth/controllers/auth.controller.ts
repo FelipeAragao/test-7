@@ -4,10 +4,10 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { LocalAuthGuard } from 'src/auth/guards/local.guard';
-import { LoginOutput } from 'src/auth/outputs/login.output';
-import { AuthService } from 'src/auth/services/auth.service';
 import { GoogleAuthGuard } from '../guards/google.guard';
+import { AuthService } from '@auth/services/auth.service';
+import { LoginOutput } from '@auth/outputs/login.output';
+import { LocalAuthGuard } from '@auth/guards/local.guard';
 
 @ApiTags('authenticate')
 @Controller({ path: 'authenticate', version: '1' })

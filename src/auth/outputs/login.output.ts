@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserOutput } from 'src/user/outputs/user.output';
+import { UserOutput } from '@user/outputs/user.output';
 
 export class LoginOutput {
   @ApiProperty()

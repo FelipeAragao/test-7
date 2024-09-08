@@ -16,10 +16,11 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { AppLogger } from 'src/shared/logger/logger.service';
 import { UserRequestOutput } from '../outputs/user.output';
-import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { AppLogger } from '@shared/logger/logger.service';
+import { JwtAuthGuard } from '@auth/guards/jwt.guard';
 
 @ApiTags('users')
 @UseGuards(JwtAuthGuard)
@@ -36,6 +37,12 @@ export class UserController {
     description: 'User succesfully created',
     type: UserRequestOutput,
   })
+  @ApiUnauthorizedResponse({
+    description: 'User creation failed due to authorization error',
+    example: {
+      error: 'Unauthorized',
+    },
+  })
   @ApiBadRequestResponse({
     description: 'User creation failed due to input error',
     example: {
@@ -50,7 +57,7 @@ export class UserController {
       return { user };
     } catch (error) {
       console.log(error);
-      return { error };
+      return { error: error.message };
     }
   }
 
@@ -58,8 +65,14 @@ export class UserController {
     description: 'User found',
     type: UserRequestOutput,
   })
+  @ApiUnauthorizedResponse({
+    description: 'User retrieval failed due to authorization error',
+    example: {
+      error: 'Unauthorized',
+    },
+  })
   @ApiNotFoundResponse({
-    description: 'User creation failed due to input error',
+    description: 'User cnot found',
     example: {
       error: 'User f59cfd6f-4b65-4e95-b65d-814cbe32b817 not found',
     },
@@ -74,7 +87,7 @@ export class UserController {
       return { user };
     } catch (error) {
       console.log(error);
-      return { error };
+      return { error: error.message };
     }
   }
 
@@ -82,10 +95,22 @@ export class UserController {
     description: 'User updated',
     type: UserRequestOutput,
   })
+  @ApiUnauthorizedResponse({
+    description: 'User update failed due to authorization error',
+    example: {
+      error: 'Unauthorized',
+    },
+  })
   @ApiNotFoundResponse({
     description: 'User update failed due to input error',
     example: {
       error: 'User f59cfd6f-4b65-4e95-b65d-814cbe32b817 not found',
+    },
+  })
+  @ApiBadRequestResponse({
+    description: 'User update failed due to input error',
+    example: {
+      error: 'Bad request',
     },
   })
   @Patch(':id')
@@ -95,7 +120,7 @@ export class UserController {
       return { user };
     } catch (error) {
       console.log(error);
-      return { error };
+      return { error: error.message };
     }
   }
 }

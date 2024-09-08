@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from 'src/user/user.module';
 import { AuthService } from './services/auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './strategies/local.strategy';
-import { AuthController } from 'src/auth/controllers/auth.controller';
 import { JwtModule } from '@nestjs/jwt';
-import { SharedModule } from 'src/shared/shared.module';
 import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
+import { SharedModule } from '@shared/shared.module';
+import { UserModule } from '@user/user.module';
+import { AuthController } from './controllers/auth.controller';
 
 @Module({
   imports: [
