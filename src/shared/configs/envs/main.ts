@@ -37,7 +37,7 @@ export default () => ({
     },
   },
   fileUpload: {
-    storageStrategy: process.env.STORAGE_STRATEGY,
+    storageDriver: process.env.STORAGE_DRIVER,
     bucket: process.env.AWS_S3_BUCKET,
     fileSizeLimit: process.env.FILE_SIZE_LIMIT,
     maxCount: process.env.MAX_FILE_COUNT,

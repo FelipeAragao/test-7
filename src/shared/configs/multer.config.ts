@@ -14,7 +14,7 @@ export class MulterConfigService implements MulterOptionsFactory {
 
   createMulterOptions(): MulterModuleOptions {
     const isS3 =
-      this.configService.get<string>('fileUpload.storageStrategy') === 's3';
+      this.configService.get<string>('fileUpload.storageDriver') === 's3';
 
     console.log(`Using ${isS3 ? 'S3' : 'Local'} storage`);
 
