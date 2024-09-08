@@ -6,12 +6,16 @@ import {
   Patch,
   Param,
   UseGuards,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
 import { DealService } from '../services/deal.service';
 import { CreateDealDto } from '../dto/create-deal.dto';
 import { UpdateDealDto } from '../dto/update-deal.dto';
 import {
   ApiBadRequestResponse,
+  ApiBody,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -20,6 +24,9 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@auth/guards/jwt.guard';
 import { DealRequestOutput } from '@deal/outputs/deal.output';
+import { DealType, UrgencyType } from '@deal/entities/deal.entity';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { CustomFile } from '@shared/types/customFile.type';
 
 @ApiTags('deals')
 @UseGuards(JwtAuthGuard)
@@ -43,12 +50,56 @@ export class DealController {
       error: 'Bad request',
     },
   })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        type: {
+          type: 'string',
+          enum: [DealType.SELLING, DealType.TRADE, DealType.WISH],
+        },
+        value: { type: 'number' },
+        description: { type: 'string' },
+        tradeFor: { type: 'string' },
+        location: {
+          type: 'object',
+          properties: {
+            lat: { type: 'number' },
+            lng: { type: 'number' },
+            address: { type: 'string' },
+            city: { type: 'string' },
+            state: { type: 'string' },
+            zipcode: { type: 'string' },
+          },
+        },
+        urgency: {
+          type: 'object',
+          properties: {
+            type: {
+              type: 'string',
+              enum: [UrgencyType.HIGH, UrgencyType.MEDIUM, UrgencyType.LOW],
+            },
+            limitDate: { type: 'string' },
+          },
+        },
+        photos: { type: 'array', items: { type: 'string', format: 'binary' } },
+      },
+      required: ['type', 'value', 'location', 'urgency'],
+    },
+  })
+  @UseInterceptors(FilesInterceptor('photos'))
   @Post()
-  async create(@Body() createDealDto: CreateDealDto) {
+  async create(
+    @Body() createDealDto: CreateDealDto,
+    @UploadedFiles() photos: CustomFile[],
+  ) {
     try {
-      const deal = await this.dealService.create(createDealDto);
+      const deal = await this.dealService.create(createDealDto, photos);
       return { deal };
     } catch (error) {
+      console.log(error);
+
       return { error: error.message };
     }
   }
@@ -101,12 +152,19 @@ export class DealController {
       error: 'Bad request',
     },
   })
+  @UseInterceptors(FilesInterceptor('photos'))
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateDealDto: UpdateDealDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateDealDto: UpdateDealDto,
+    @UploadedFiles() photos: CustomFile[],
+  ) {
     try {
-      const deal = await this.dealService.update(id, updateDealDto);
+      const deal = await this.dealService.update(id, updateDealDto, photos);
       return { deal };
     } catch (error) {
+      console.error(error);
+
       return { error: error.message };
     }
   }

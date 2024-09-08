@@ -1,5 +1,7 @@
 import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import {
+  ApiBody,
+  ApiConsumes,
   ApiOkResponse,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -20,6 +22,17 @@ export class AuthController {
   })
   @ApiUnauthorizedResponse({
     description: 'User login failed due to invalid credentials',
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        login: { type: 'string' },
+        password: { type: 'string' },
+      },
+      required: ['login', 'password'],
+    },
   })
   @UseGuards(LocalAuthGuard)
   @Post()

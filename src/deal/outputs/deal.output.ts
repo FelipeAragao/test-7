@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { LocationOutput } from '@user/outputs/location.output';
 import { Expose } from 'class-transformer';
 import { UrgencyOutput } from './urgency.output';
+import { PhotoOutput } from './photo.output';
 
 export class DealOutput {
   @Expose()
@@ -28,6 +29,10 @@ export class DealOutput {
   @Expose()
   @ApiProperty()
   urgency: UrgencyOutput;
+
+  @Expose()
+  @ApiProperty()
+  photos: PhotoOutput[];
 }
 
 export class DealRequestOutput {

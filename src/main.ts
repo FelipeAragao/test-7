@@ -33,6 +33,7 @@ async function bootstrap() {
     .setTitle('Vibbraneo Ecommerce')
     .setDescription('API Documentation for Vibbraneo Ecommerce')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('/docs', app, document);

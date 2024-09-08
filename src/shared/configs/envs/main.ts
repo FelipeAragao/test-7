@@ -36,4 +36,10 @@ export default () => ({
       googleCallbackUrl: process.env.GOOGLE_CALLBACK_URL,
     },
   },
+  fileUpload: {
+    storageStrategy: process.env.STORAGE_STRATEGY,
+    bucket: process.env.AWS_S3_BUCKET,
+    fileSizeLimit: process.env.FILE_SIZE_LIMIT,
+    maxCount: process.env.MAX_FILE_COUNT,
+  },
 });

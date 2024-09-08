@@ -4,10 +4,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Photo } from './photo.entity';
 
 export enum DealType {
   SELLING = 1,
@@ -46,6 +49,7 @@ export class Deal {
   @Column('decimal', { precision: 10, scale: 7 })
   lng: number;
 
+  @Exclude()
   @Column({ type: 'varchar', length: 255 })
   address: string;
 
@@ -61,9 +65,11 @@ export class Deal {
   @Column({ type: 'varchar', length: 20 })
   zipcode: string;
 
+  @Exclude()
   @Column({ type: 'enum', enum: UrgencyType, name: 'urgency' })
   urgencyType: UrgencyType;
 
+  @Exclude()
   @Column({ type: 'date', name: 'limit_date' })
   limitDate: Date;
 
@@ -93,6 +99,10 @@ export class Deal {
     };
   }
 
-  @ManyToOne(() => User, (user) => user.deals)
+  @ManyToOne(() => User, (user) => user.deals, { eager: true })
   user: User;
+
+  @OneToMany(() => Photo, (photo) => photo.deal, { cascade: true, eager: true })
+  @JoinColumn()
+  photos: Photo[];
 }

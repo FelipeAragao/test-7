@@ -17,4 +17,8 @@ export default Joi.object({
   GOOGLE_CLIENT_ID: Joi.string().optional(),
   GOOGLE_CLIENT_SECRET: Joi.string().optional(),
   GOOGLE_CALLBACK_URL: Joi.string().uri().optional(),
+  STORAGE_STRATEGY: Joi.string().valid('local', 's3').default('local'),
+  AWS_S3_BUCKET: Joi.string().optional(),
+  FILE_SIZE_LIMIT: Joi.number().optional(),
+  MAX_FILE_COUNT: Joi.number().optional(),
 });

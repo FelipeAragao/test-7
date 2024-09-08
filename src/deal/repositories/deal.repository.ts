@@ -42,7 +42,12 @@ export class DealRepository extends Repository<Deal> {
     attribute: string,
     value: string | number,
   ): Promise<Deal> {
-    return this.findOneBy({ [attribute]: value });
+    return this.findOne({
+      where: { [attribute]: value },
+      relations: {
+        photos: true,
+      },
+    });
   }
 
   async updateDeal(id: string, updateDealDto: UpdateDealDto): Promise<Deal> {

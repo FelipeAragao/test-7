@@ -3,8 +3,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppLoggerModule } from './logger/logger.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import configuration from './configs/main';
-import validationSchema from './configs/validation';
+import configuration from './configs/envs/main';
+import validationSchema from './configs/envs/validation';
+import { TypeOrmConfigService } from './configs/typeorm.config';
 
 @Module({
   imports: [
@@ -15,22 +16,11 @@ import validationSchema from './configs/validation';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get<string>('database.host', 'localhost'),
-        port: configService.get<number>('database.port', 5432),
-        username: configService.get<string>('database.username'),
-        password: configService.get<string>('database.password'),
-        database: configService.get<string>('database.database'),
-        schema: configService.get<string>('database.schema'),
-        applicationName: configService.get<string>('database.applicationName'),
-        entities: [__dirname + '/../**/entities/*.entity{.ts,.js}'],
-        debug: configService.get<string>('env') === 'local',
-      }),
+      useClass: TypeOrmConfigService,
     }),
     AppLoggerModule,
   ],
   exports: [ConfigModule, AppLoggerModule],
-  providers: [],
+  // providers: [MulterConfigService],
 })
 export class SharedModule {}

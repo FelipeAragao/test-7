@@ -6,10 +6,24 @@ import { Deal } from './entities/deal.entity';
 import { SharedModule } from '@shared/shared.module';
 import { UserModule } from '@user/user.module';
 import { DealRepository } from './repositories/deal.repository';
+import { Photo } from './entities/photo.entity';
+import { PhotoRepository } from './repositories/photo.repository';
+import { MulterModule } from '@nestjs/platform-express';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MulterConfigService } from '@shared/configs/multer.config';
 
 @Module({
-  imports: [SharedModule, UserModule, TypeOrmModule.forFeature([Deal])],
+  imports: [
+    SharedModule,
+    UserModule,
+    TypeOrmModule.forFeature([Deal, Photo]),
+    MulterModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useClass: MulterConfigService,
+    }),
+  ],
   controllers: [DealController],
-  providers: [DealService, DealRepository],
+  providers: [DealService, DealRepository, PhotoRepository],
 })
 export class DealModule {}
