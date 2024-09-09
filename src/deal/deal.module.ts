@@ -15,6 +15,9 @@ import { UserRepository } from '@user/repositories/user.repository';
 import { BidController } from './modules/bid/controllers/bid.controller';
 import { BidService } from './modules/bid/services/bid.service';
 import { BidRepository } from './modules/bid/repositories/bid.repository';
+import { MessageController } from './modules/message/controllers/message.controller';
+import { MessageService } from './modules/message/services/message.service';
+import { MessageRepository } from './modules/message/repositories/message.repository';
 
 @Module({
   imports: [
@@ -27,13 +30,15 @@ import { BidRepository } from './modules/bid/repositories/bid.repository';
       useClass: MulterConfigService,
     }),
   ],
-  controllers: [DealController, BidController],
+  controllers: [DealController, BidController, MessageController],
   providers: [
     DealService,
     BidService,
+    MessageService,
     DealRepository,
     PhotoRepository,
     BidRepository,
+    MessageRepository,
     UserRepository,
   ],
 })

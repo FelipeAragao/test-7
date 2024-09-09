@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { Photo } from './photo.entity';
 import { Bid } from '@deal/modules/bid/entities/bid.entity';
+import { Message } from '@deal/modules/message/entities/message.entity';
 
 export enum DealType {
   SELLING = 1,
@@ -107,4 +108,7 @@ export class Deal {
 
   @OneToMany(() => Bid, (bid) => bid.deal, { cascade: true })
   bids: Bid[];
+
+  @OneToMany(() => Message, (msg) => msg.user, { cascade: true })
+  messages: Message[];
 }
