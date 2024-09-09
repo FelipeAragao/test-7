@@ -1,85 +1,126 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Vibbraneo Ecommerce Backend
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+<a href="https://gitmoji.dev">
+  <img
+    src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square"
+    alt="Gitmoji"
+  />
+</a>
 
-## Description
+![Nest](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-000?style=for-the-badge&logo=postgresql)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Projeto desenvolvido utilizado o framework [NestJS](https://nestjs.com/). Representa o backend de um ecommerce de troca e venda de equipamentos eletrônicos.
 
-## Project setup
+## Ferramentas necessárias
 
-```bash
-$ npm install
+- Node 20.x
+- Docker
+
+## Variáveis de Ambiente
+
+Para rodar esse projeto, você vai precisar adicionar as seguintes variáveis de ambiente no seu .env.Lembrando que recomenda-se alterar algumas delas, como credenciais do banco de dados
+
+```text
+# Postgres
+POSTGRES_USER="ecommerce"
+POSTGRES_PASSWORD="ChangeMe!123"
+POSTGRES_DB="ecommerce"
+
+# JWT
+JWT_ACCESS_TOKEN_EXP_IN_SEC=3600
+JWT_PUBLIC_KEY_BASE64="gerar-chave-publica-e-converter-para-base64"
+JWT_PRIVATE_KEY_BASE64="gerar-chave-privada-e-converter-para-base64"
+
+# SSO
+## Google
+GOOGLE_CLIENT_ID="google-client-id"
+GOOGLE_CLIENT_SECRET="google-client-secret"
+GOOGLE_CALLBACK_URL="http://localhost:3000/api/v1/authenticate/sso/callback"
+
+# Cloudbeaver
+CB_PORT=8080
+CB_SERVER_NAME="Ecommerce"
+CB_ADMIN_NAME="vibbraneo"
+CB_ADMIN_PASSWORD="admin"
 ```
 
-## Compile and run the project
+### Gerando chaves pública e privada
+
+As chaves são usada para codificação e verificação do JWT. Deve-se gerar as chaves `RS256` conforme os comandos abaixo.
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+openssl genpkey -algorithm RSA -out private.pem -pkeyopt rsa_keygen_bits:2048  # Chave privada
+openssl rsa -in private.pem -pubout -out public.pem  # Chave pública
 ```
 
-## Run tests
+Converta as chaves para `base64`
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+base64 private.pem > private.base64  # Coverter chave privada para base64
+base64 public.pem > public.base64  # Converer chave pública para base64
 ```
 
-## Resources
+Copie os valores das cheves em `base64` para as respectivas variáveis de ambiente
 
-Check out a few resources that may come in handy when working with NestJS:
+### Credenciais SSO Google
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Deve-se criar um app no console da Google Cloud Platform e gerar as credenciais. Mais informações na [documentação](https://console.cloud.google.com/apis).
 
-## Support
+## Rodando localmente
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Clone o projeto
 
-## Stay in touch
+Entre no diretório do projeto
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+  cd vibbraneo-ecommerce-backend
+```
 
-## License
+Instale as dependências
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```bash
+  npm install
+```
+
+Inicie a stack do docker-compose contendo o banco de dados Postgres e o Cloudbeaver, usado para visualização do banco de dado. Pode-se usar o client de sua preferência também.
+
+```bash
+docker-compose up -d
+```
+
+Inicie o servidor
+
+```bash
+  npm run start  # Modo de desenvolvimento
+  npm run start:dev  # Watch mode
+  npm run start:debug  # Debug mode
+  npm run start:prod  # Modo produção
+```
+
+Caso queira incluir o build do projeot na stack do docker-compose, use
+
+```bash
+docker-compose up -d --build
+```
+
+
+## Documentação da API
+
+### Swagger
+
+Para ter acesso a documentação via Swagger, rode o servidor conforme as intruções do tópico anterior e acesse http://localhost:3000/docs
+
+### Insomnia
+
+Foi gerada uma coleção de requests no Insomnia juntamente com alguns exemplos de teste. Para carregá-la, instale o [Insomnia](https://insomnia.rest/download) e importe o arquivo `insomnia.json` que se encontra na raiz do projeto
+.
+## Roadmap
+
+- Melhorar estratégia de armazenamento de arquivos
+
+- Melhorar cobertura de testes
+
+- Adicionar pipeline de deploy
+
