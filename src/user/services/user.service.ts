@@ -40,7 +40,7 @@ export class UserService {
   }
 
   async findById(id: string): Promise<UserOutput> {
-    const user = await this.userRepository.findByUniqueAttribute('id', id);
+    const user = await this.userRepository.findByUserUniqueAttribute('id', id);
 
     if (!user) {
       throw new NotFoundException(`User with id ${id} not found`);
@@ -50,7 +50,7 @@ export class UserService {
   }
 
   async findByLogin(login: string): Promise<UserOutput> {
-    const user = await this.userRepository.findByUniqueAttribute(
+    const user = await this.userRepository.findByUserUniqueAttribute(
       'login',
       login,
     );
@@ -63,7 +63,7 @@ export class UserService {
   }
 
   async findByEmail(email: string): Promise<UserOutput> {
-    const user = await this.userRepository.findByUniqueAttribute(
+    const user = await this.userRepository.findByUserUniqueAttribute(
       'email',
       email,
     );

@@ -4,13 +4,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Photo } from './photo.entity';
+import { Bid } from '@deal/modules/bid/entities/bid.entity';
 
 export enum DealType {
   SELLING = 1,
@@ -103,6 +103,8 @@ export class Deal {
   user: User;
 
   @OneToMany(() => Photo, (photo) => photo.deal, { cascade: true, eager: true })
-  @JoinColumn()
   photos: Photo[];
+
+  @OneToMany(() => Bid, (bid) => bid.deal, { cascade: true })
+  bids: Bid[];
 }

@@ -37,7 +37,7 @@ export class UserRepository extends Repository<User> {
     return user;
   }
 
-  async findByUniqueAttribute(
+  async findByUserUniqueAttribute(
     attribute: keyof User,
     value: string,
   ): Promise<User | undefined> {

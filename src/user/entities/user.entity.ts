@@ -10,6 +10,7 @@ import {
 import { IsEmail } from 'class-validator';
 import { Exclude, Expose } from 'class-transformer';
 import { Deal } from '@deal/entities/deal.entity';
+import { Bid } from '@deal/modules/bid/entities/bid.entity';
 
 @Entity('users')
 export class User {
@@ -77,4 +78,7 @@ export class User {
 
   @OneToMany(() => Deal, (deal) => deal.user)
   deals: Deal[];
+
+  @OneToMany(() => Bid, (bid) => bid.user, { cascade: true })
+  bids: Bid[];
 }

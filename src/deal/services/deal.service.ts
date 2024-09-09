@@ -20,7 +20,10 @@ export class DealService {
     userId: string,
     photos: CustomFile[] = [],
   ): Promise<DealOutput> {
-    const user = await this.userRepository.findByUniqueAttribute('id', userId);
+    const user = await this.userRepository.findByUserUniqueAttribute(
+      'id',
+      userId,
+    );
     const deal = await this.dealRepository.createDeal(createDealDto, user);
 
     await Promise.all([

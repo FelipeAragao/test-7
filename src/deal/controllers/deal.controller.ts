@@ -40,7 +40,7 @@ export class DealController {
     type: DealRequestOutput,
   })
   @ApiUnauthorizedResponse({
-    description: 'User creation failed due to authorization error',
+    description: 'Deal creation failed due to authorization error',
     example: {
       error: 'Unauthorized',
     },

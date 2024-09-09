@@ -12,6 +12,9 @@ import { MulterModule } from '@nestjs/platform-express';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MulterConfigService } from '@shared/configs/multer.config';
 import { UserRepository } from '@user/repositories/user.repository';
+import { BidController } from './modules/bid/controllers/bid.controller';
+import { BidService } from './modules/bid/services/bid.service';
+import { BidRepository } from './modules/bid/repositories/bid.repository';
 
 @Module({
   imports: [
@@ -24,7 +27,14 @@ import { UserRepository } from '@user/repositories/user.repository';
       useClass: MulterConfigService,
     }),
   ],
-  controllers: [DealController],
-  providers: [DealService, DealRepository, PhotoRepository, UserRepository],
+  controllers: [DealController, BidController],
+  providers: [
+    DealService,
+    BidService,
+    DealRepository,
+    PhotoRepository,
+    BidRepository,
+    UserRepository,
+  ],
 })
 export class DealModule {}
