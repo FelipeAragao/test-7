@@ -7,6 +7,7 @@ import {
   Param,
   UseGuards,
   Request,
+  Logger,
 } from '@nestjs/common';
 import { BidService } from '../services/bid.service';
 import { CreateBidDto } from '../dto/create-bid.dto';
@@ -28,6 +29,8 @@ import { JwtAuthGuard } from '@auth/guards/jwt.guard';
 @ApiTags('bids')
 @Controller({ path: 'deals/:dealId/bids', version: '1' })
 export class BidController {
+  private readonly logger = new Logger('BIDS');
+
   constructor(private readonly bidService: BidService) {}
 
   @ApiCreatedResponse({
@@ -55,8 +58,12 @@ export class BidController {
   ) {
     try {
       return this.bidService.create(createBidDto, dealId, userId);
-    } catch (error) {
-      return { error: error.message };
+    } catch ({ message, status }) {
+      this.logger.error({
+        message: message,
+        status: status,
+      });
+      return { error: message };
     }
   }
 
@@ -74,8 +81,12 @@ export class BidController {
   findAll(@Param('dealId') dealId: string) {
     try {
       return this.bidService.findAll(dealId);
-    } catch (error) {
-      return { error: error.message };
+    } catch ({ message, status }) {
+      this.logger.error({
+        message: message,
+        status: status,
+      });
+      return { error: message };
     }
   }
 
@@ -93,8 +104,12 @@ export class BidController {
   findOne(@Param('dealId') dealId: string, @Param('id') id: string) {
     try {
       return this.bidService.findOne(id, dealId);
-    } catch (error) {
-      return { error: error.message };
+    } catch ({ message, status }) {
+      this.logger.error({
+        message: message,
+        status: status,
+      });
+      return { error: message };
     }
   }
 
@@ -125,8 +140,12 @@ export class BidController {
   update(@Param('id') id: string, @Body() updateBidDto: UpdateBidDto) {
     try {
       return this.bidService.update(id, updateBidDto);
-    } catch (error) {
-      return { error: error.message };
+    } catch ({ message, status }) {
+      this.logger.error({
+        message: message,
+        status: status,
+      });
+      return { error: message };
     }
   }
 }

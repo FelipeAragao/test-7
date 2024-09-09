@@ -6,10 +6,12 @@ import {
   MulterModuleOptions,
   MulterOptionsFactory,
 } from '@nestjs/platform-express';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class MulterConfigService implements MulterOptionsFactory {
+  private readonly logger = new Logger('MULTER_SETTTINGS');
+
   constructor(private readonly configService: ConfigService) {}
 
   createMulterOptions(): MulterModuleOptions {
@@ -25,7 +27,7 @@ export class MulterConfigService implements MulterOptionsFactory {
             bucket: this.configService.get<string>('fileUpload.bucket'),
             acl: 'public-read',
             key: (req, file, cb) => {
-              console.log('Uploading to S3 🍿');
+              this.logger.log('Uploading to S3 🍿');
 
               cb(null, `${Date.now().toString()}-${file.originalname}`);
             },
@@ -33,7 +35,7 @@ export class MulterConfigService implements MulterOptionsFactory {
         : diskStorage({
             destination: './uploads', // Local Docker volume storage
             filename: (req, file, cb) => {
-              console.log('Uploading to disk 💾');
+              this.logger.log('Uploading to disk 💾');
 
               cb(null, `${Date.now().toString()}-${file.originalname}`);
             },

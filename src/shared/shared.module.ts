@@ -1,11 +1,12 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
-import { AppLoggerModule } from './logger/logger.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration from './configs/envs/main';
 import validationSchema from './configs/envs/validation';
 import { TypeOrmConfigService } from './configs/typeorm.config';
+import { LoggerModule } from 'nestjs-pino';
+import { loggerFactory } from './factories/logger.factory';
 
 @Module({
   imports: [
@@ -18,9 +19,12 @@ import { TypeOrmConfigService } from './configs/typeorm.config';
       inject: [ConfigService],
       useClass: TypeOrmConfigService,
     }),
-    AppLoggerModule,
+    LoggerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: loggerFactory,
+    }),
   ],
-  exports: [ConfigModule, AppLoggerModule],
-  // providers: [MulterConfigService],
+  exports: [ConfigModule],
 })
 export class SharedModule {}

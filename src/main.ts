@@ -8,9 +8,10 @@ import {
   ValidationPipe,
   VersioningType,
 } from '@nestjs/common';
+import { Logger } from 'nestjs-pino';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
   const configService = app.get(ConfigService);
 
   const env = configService.get<string>('env');
@@ -19,6 +20,7 @@ async function bootstrap() {
   app.enableVersioning({
     type: VersioningType.URI,
   });
+  app.useLogger(app.get(Logger));
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

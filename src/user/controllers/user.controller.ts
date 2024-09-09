@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   UseGuards,
+  Logger,
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { CreateUserDto } from '../dto/create-user.dto';
@@ -19,19 +20,15 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { UserRequestOutput } from '../outputs/user.output';
-import { AppLogger } from '@shared/logger/logger.service';
 import { JwtAuthGuard } from '@auth/guards/jwt.guard';
 
 @ApiTags('users')
 @UseGuards(JwtAuthGuard)
 @Controller({ path: 'users', version: '1' })
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-    private readonly logger: AppLogger,
-  ) {
-    this.logger.setContext(UserController.name);
-  }
+  private readonly logger = new Logger('USERS');
+
+  constructor(private readonly userService: UserService) {}
 
   @ApiCreatedResponse({
     description: 'User succesfully created',
@@ -52,12 +49,14 @@ export class UserController {
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     try {
-      console.log(createUserDto);
       const user = await this.userService.create(createUserDto);
       return { user };
-    } catch (error) {
-      console.log(error);
-      return { error: error.message };
+    } catch ({ message, status }) {
+      this.logger.error({
+        message: message,
+        status: status,
+      });
+      return { error: message };
     }
   }
 
@@ -79,15 +78,18 @@ export class UserController {
   })
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    console.log('starting get endpoint');
+    this.logger.log('Retrieve user by ID');
 
     try {
       const user = await this.userService.findById(id);
 
       return { user };
-    } catch (error) {
-      console.log(error);
-      return { error: error.message };
+    } catch ({ message, status }) {
+      this.logger.error({
+        message: message,
+        status: status,
+      });
+      return { error: message };
     }
   }
 
@@ -118,9 +120,12 @@ export class UserController {
     try {
       const user = await this.userService.update(id, updateUserDto);
       return { user };
-    } catch (error) {
-      console.log(error);
-      return { error: error.message };
+    } catch ({ message, status }) {
+      this.logger.error({
+        message: message,
+        status: status,
+      });
+      return { error: message };
     }
   }
 }

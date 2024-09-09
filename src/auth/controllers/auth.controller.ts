@@ -1,7 +1,12 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import {
-  ApiBody,
-  ApiConsumes,
+  Controller,
+  Get,
+  Logger,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
+import {
   ApiOkResponse,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -14,6 +19,8 @@ import { LocalAuthGuard } from '@auth/guards/local.guard';
 @ApiTags('authenticate')
 @Controller({ path: 'authenticate', version: '1' })
 export class AuthController {
+  private readonly logger = new Logger('AUTHENTICATION');
+
   constructor(private authService: AuthService) {}
 
   @ApiOkResponse({
@@ -23,38 +30,35 @@ export class AuthController {
   @ApiUnauthorizedResponse({
     description: 'User login failed due to invalid credentials',
   })
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        login: { type: 'string' },
-        password: { type: 'string' },
-      },
-      required: ['login', 'password'],
-    },
-  })
   @UseGuards(LocalAuthGuard)
   @Post()
   async login(@Request() { user }) {
     try {
       return this.authService.login(user);
-    } catch (error) {
-      console.log(error);
+    } catch ({ message, status }) {
+      this.logger.error({
+        message: message,
+        status: status,
+      });
+      return { error: message };
     }
   }
 
   @UseGuards(GoogleAuthGuard)
   @Get('sso')
-  async googleAuth(@Request() _request) {}
+  async googleAuth() {}
 
   @UseGuards(GoogleAuthGuard)
   @Get('sso/callback')
   async googleAuthRedirect(@Request() { user }) {
     try {
       return this.authService.login(user);
-    } catch (error) {
-      console.log(error);
+    } catch ({ message, status }) {
+      this.logger.error({
+        message: message,
+        status: status,
+      });
+      return { error: message };
     }
   }
 }
